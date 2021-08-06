@@ -20,9 +20,9 @@ export default function Application(props) {
 
   useEffect(() => {
 
-    const getDays =  'http://localhost:8001/api/days'
-    const getAppointments = 'http://localhost:8001/api/appointments'
-    const getInterviewers = 'http://localhost:8001/api/interviewers'
+    const getDays =  '/api/days'
+    const getAppointments = '/api/appointments'
+    const getInterviewers = '/api/interviewers'
 
     Promise.all([
       axios.get(getDays),
@@ -39,24 +39,25 @@ export default function Application(props) {
 
   // const appointmentList = getAppointmentsForDay(state).map((appointment) => {
 
-  const dailyAppointments = getAppointmentsForDay(state, state.day);
-  const appointmentList = dailyAppointments.map((appointment) => {
-    return <Appointment key={appointment.id} {...appointment} />;
-  });
+  // const dailyAppointments = getAppointmentsForDay(state, state.day);
+  // const appointmentList = dailyAppointments.map((appointment) => {
+  //   return <Appointment key={appointment.id} {...appointment} />;
+  // });
 
   // Needs to remove comments later
-  // const appointments = getAppointmentsForDay(state, state.day);
-  // const schedule = appointments.map((appointment) => {
-  //   const interview = getInterview(state, appointment.interview);
-  //   return (
-  //     <Appointment
-  //       key={appointment.id}
-  //       id={appointment.id}
-  //       time={appointment.time}
-  //       interview={interview}
-  //     />
-  //   );
-  // });
+  const appointments = getAppointmentsForDay(state, state.day);
+
+  const schedule = appointments.map((appointment) => {
+    const interview = getInterview(state, appointment.interview);
+    return (
+      <Appointment
+        key={appointment.id}
+        id={appointment.id}
+        time={appointment.time}
+        interview={interview}  //interview is the whole appointment object as well as the specific interviewer object instead of having an id as an foreign key.
+      />
+    );
+  });
 
   return (
     <main className="layout">
@@ -83,8 +84,8 @@ export default function Application(props) {
         />
       </section>
       <section className="schedule">
-        {appointmentList}
-        {/* {schedule} */}
+        {/* {appointmentList} */}
+        {schedule}
         <Appointment key="last" time="5pm" />
       </section>
     </main>

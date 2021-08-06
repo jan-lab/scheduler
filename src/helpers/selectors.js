@@ -9,19 +9,30 @@ export const getAppointmentsForDay = function(state, day) {
  if (!dayObj) {
    return [];
  }
+ //state.appointments[id] is an interview
  return dayObj.appointments.map(id => state.appointments[id]);
  
 };
 
-// export const getInterview = function(state, interview) {
+//interview is just a specific appointment for the day
+export const getInterview = function(state, interview) {
 
-//   // if (!state.appointments.interview.interviewer) {
-//   //   return null;
-//   // }
-//   console.log(state.appointments.id);
-//   return state.appointments.interview;
+  if (!state.interviewers) {
+    return null;
+  }
+  // console.log(state.appointments.id);
+  // return state.appointments.interview;
 
-// } ;
+  // console.log(state.interviewers);
+  // console.log(interview);
+
+  return (
+    //return two things: the whole interview and an object that contains the interview as well as the 
+    //interviewer of the appointment
+    interview && {...interview, interviewer: state.interviewers[interview.interviewer]}
+  )
+
+} ;
 
 // {
 //   "id":1,
