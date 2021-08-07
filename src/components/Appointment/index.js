@@ -34,7 +34,7 @@ console.log('props:',props)
       )}
       {mode === CREATE && (
         <Form
-          interviewers={[]}
+          interviewers={props.interviewers}
           onCancel={() =>
             back(EMPTY)
           }

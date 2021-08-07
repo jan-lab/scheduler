@@ -4,15 +4,35 @@ export function getAppointmentsForDay(state, givenDay) {
   //... returns an array of appointments for that day
   const selectedDay = state.days.find(day => day.name === givenDay );
   // check if days array has an invalid day
-  if (state.days.length == 0 || !selectedDay) {
+  if (state.days.length === 0 || !selectedDay) {
     return [];
   }
   // for every id in selectedDay.appointments, the id is transformed to be its associated value in state.appointments
   const actualAppointments = selectedDay.appointments.map((id) => {
+    // console.log(state.appointments[id]);
     return state.appointments[id];
   });
   return actualAppointments;
 }
+
+export function getInterviewersForDay(state, givenDay) {
+  //... returns an array of appointments for that day
+  const selectedDay = state.days.find(day => day.name === givenDay );
+  // check if days array has an invalid day
+  if (state.days.length === 0 || !selectedDay) {
+    return [];
+  }
+  // for every id in selectedDay.appointments, the id is transformed to be its associated value in state.appointments
+  const actualInterviewers = selectedDay.interviewers.map((id) => {
+    // console.log(state.interviewers[id])
+    return state.interviewers[id];
+  });
+  // console.log(actualInterviewers)
+  return actualInterviewers;
+}
+
+
+
 
 //This function will return an object that contains the interview data if it is passed an object that contains an interviewer.
 export function getInterview(state, interview) {
@@ -27,21 +47,6 @@ export function getInterview(state, interview) {
 
   return { student: interview.student, interviewer: interviewer};
 }
-
-
-// export function getInterviewersForDay(state, interview) {
-//   if (!interview) {
-//     return null;
-//   }
-//   //The function should return a new object containing the interview data when we pass it an object that contains the interviewer. Otherwise, the function should return null.
-//   const interviewerId = interview.interviewer;
-
-//   //transform an interview object with an id representing the interviewer to an object containing a nested object
-//   const interviewer = state.interviewers[interviewerId];
-
-//   return { student: interview.student, interviewer: interviewer};
-// }
-
 
 
 
