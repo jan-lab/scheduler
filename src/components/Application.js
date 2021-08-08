@@ -9,6 +9,8 @@ export default function Application(props) {
   // const [day, setDay] = useState("Monday");
   // const [days, setDays] = useState([]);
 
+  console.log('props passed to Application component:',props); // {}
+
   const [state, setState] = useState({
     day: "Monday",
     days: [],
@@ -39,21 +41,77 @@ export default function Application(props) {
     
     const appointments = getAppointmentsForDay(state, state.day);
     const interviewers = getInterviewersForDay(state, state.day);
+
+
+    //We first locally careate an appointment online 50.
+    async function bookInterview(id, interview) {
+      // console.log(id, interview);
+
+      const appointment = {
+        ...state.appointments[id], //any current data that relates to the appointments[id], we made a copy with the ...operator because we are not using the entire state just modifying the appointments section of it
+        // interview: { ...interview } //any current data that relates to the interview object
+        interview  //we want to use the whole interview object. don't have to use the spread operator
+      };
+      //we store the appointments object
+      const appointments = {
+        ...state.appointments, //creating a copy of all appointments in the state
+        [id]: appointment //we are adding a new appointment to the state appointments object
+      };
+     
+      //We make an api call. first is the url and append the id to the URL then we give the appointment data
+      //If we get an error we do the catch if we get a proper response we then set the local state online 70 then return true;
+      //Once the api call is completed, we return true on line 72 and then store the response on line 68.
+      let response = await axios.put('http://localhost:8001/api/appointments/' + id, appointment)
+        .then((res) => {
+          console.log(res);
+          setState({...state, appointments});
+          return true;
+        }) //shd not use catch here
+      if (response) {
+        return true;
+      }
+    }
+
+    //promise: we are using it for the api call
+    //async await: using it to return the status of the promise
+    //for api calls, we usually use both 
+
+    async function cancelInterview(id) {
+      const appointment = {
+        ...state.appointments[id], //any current data that relates to the appointments[id], we made a copy with the ...operator because we are not using the entire state just modifying the appointments section of it
+        // interview: { ...interview } //any current data that relates to the interview object
+        interview: null  //we want to use the whole interview object. don't have to use the spread operator
+      };
+      const appointments = {
+        ...state.appointments,
+        [id]: appointment
+      };
+      
+      let response = await axios.delete('http://localhost:8001/api/appointments/' + id)
+        .then((res) => {
+          console.log(res);
+          setState({...state, appointments});
+          return true;
+        }) //should not use catch here
+      if (response) {
+        return true;
+      }
+    }
+
     const schedule = appointments.map((appointment) => {
-      const interview = getInterview(state, appointment.interview);
+      const interview = getInterview(state, appointment.interview); 
+      console.log(appointment); //appointment.interview is null
       return (
       <Appointment
         key={appointment.id}
         {...appointment}
         interview={interview}
         interviewers={interviewers}
+        bookInterview={bookInterview}
+        cancelInterview={cancelInterview}
       />
       );
     });
-
-    function bookInterview(id, interview) {
-      console.log(id, interview);
-    }
 
     return (
       <main className="layout">
@@ -79,13 +137,16 @@ export default function Application(props) {
       </section>
       <section className="schedule">
         {schedule}
+     
         <Appointment key="last" time="5pm" />
       </section>
     </main>
   );
 };
 
-
+//spots remaining
+//when we go thru bookInterview we simply subtract 1 from the spots remaining
+//add 1 when we go to canclInterview
 
 
 

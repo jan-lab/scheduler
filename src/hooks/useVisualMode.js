@@ -11,13 +11,22 @@ export default function useVisualMode(initial) {
     // setMode(mode);
     setHistory( prev =>
       // if there is a new mode to replace the current mode
-      replace
+      replace //if replace is true
         // returns the last index of prev as our mode
         // adds a new mode to the end of the array
       ? [...prev.slice(0, prev.length - 1), mode]
         // returns the current mode, stays the same
       : [...prev, mode]
     )
+  }
+
+  //Create a function that will take in a new mode and update the mode state with the new value.
+  function transition2(mode, replace) {
+    // setMode(mode);
+    setHistory( prev => prev.pop()
+      // [...prev.slice(0, prev.length - 2), mode]
+    )
+    // return;
   }
 
   function back() {
@@ -31,7 +40,7 @@ export default function useVisualMode(initial) {
   //sets mode to the last item of the history array
   const mode = history[history.length-1];
   // return an object with a mode property, and transition
-  return { mode, transition, back }
+  return { mode, transition, back, transition2 }
 }
 
 
