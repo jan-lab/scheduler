@@ -26,10 +26,10 @@ return (
         className="appointment__actions-button"
         src="images/trash.png"
         alt="Delete"
-        // onClick={props.onDelete}
-        confirm 
+        onClick={props.onDelete}
+        // confirm 
         // onClick={onSave}>Save</Button>
-        onClick={() => props.onDelete()}
+        // onClick={() => props.onDelete()} //no param - no need to use this.
       />
     </section>
   </section>
