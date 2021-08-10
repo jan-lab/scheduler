@@ -33,6 +33,29 @@ useEffect(() => {
   
   }, [])
   
+  const updateSpots = function (dayName, days, appointments) {
+    // get the day object
+    const dayObj = days.find(day => day.name === dayName)
+
+    let spots = 0;
+    // for every appt id in the day object's appointments array
+    for(const id of dayObj.appointments) {
+      const appointment = appointments[id];
+      if (!appointment.interview) {
+        spots++;
+      }
+    }
+    // ensure updating an appt does not increase the number of spots
+    // update spots in that day --> new day object
+    const newDay = {...dayObj, spots};
+
+    // newDays.splice(index, 1, newDay);
+    // newDays [index] = newDay;
+    
+    // put the day back in the array --> new days array
+    const newDays = days.map(day => day.name === dayName ? newDay : day);
+    return newDays;
+  };
 
   //We first locally careate an appointment online 50.
   function bookInterview(id, interview) {
@@ -49,13 +72,16 @@ useEffect(() => {
       [id]: appointment //we are adding a new appointment to the state appointments object
     };
    
+
+   
     //We make an api call. first is the url and append the id to the URL then we give the appointment data
     //If we get an error we do the catch if we get a proper response we then set the local state online 70 then return true;
     //Once the api call is completed, we return true on line 72 and then store the response on line 68.
     return axios.put('http://localhost:8001/api/appointments/' + id, appointment)
       .then((res) => {
         console.log(res);
-        setState({...state, appointments});
+        const days = updateSpots(state.day, state.days, appointments);
+        setState({...state, appointments, days});
       }) //shd not use catch here
     }
   
@@ -78,8 +104,8 @@ useEffect(() => {
   return axios.delete('http://localhost:8001/api/appointments/' + id)
       .then((res) => {
         console.log(res);
-        setState({...state, appointments});
-  
+        const days = updateSpots(state.day, state.days, appointments);
+        setState({...state, appointments, days});
       }) //should not use catch here
 
     }
