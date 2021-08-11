@@ -2,8 +2,8 @@ import React from "react";
 
 export default function Show(props) {
 
-console.log(props.student);
-console.log(props.interviewer.name);
+// console.log(props.student);
+// console.log(props.interviewer.name);
 
 return (
   <main className="appointment__card appointment__card--show">
@@ -29,7 +29,7 @@ return (
         onClick={props.onDelete}
         // confirm 
         // onClick={onSave}>Save</Button>
-        // onClick={() => props.onDelete()} //no param - no need to use this.
+        // onClick={() => props.onDelete()} //no params used - no need to use callback.
       />
     </section>
   </section>

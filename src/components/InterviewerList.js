@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 
 function InterviewerList(props) {
-  console.log(props);
+  // console.log(props);
   // props.toString()
   const interviewers = props.interviewers.map((interviewer) => { //props.interviewers -> refer to InterviewerList attributes in stories to see what you can use after props.
     return (

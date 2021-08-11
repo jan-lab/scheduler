@@ -85,10 +85,7 @@ useEffect(() => {
       }) //shd not use catch here
     }
   
-
-  //promise: we are using it for the api call
-  //async await: using it to return the status of the promise
-  //for api calls, we usually use both 
+ 
 
   function cancelInterview(id) {
     const appointment = {
