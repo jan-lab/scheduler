@@ -1,35 +1,26 @@
-import React, { useState } from 'react';
+//import the useState hook from react
+import { useState } from 'react';
 
 export default function useVisualMode(initial) {
-  // set the mode state with the initial mode provided
-  // const [mode, setMode] = useState(initial);
-  // set the mode to the second to last index of history
+
+  //set the history with the initial mode provided
   const [history, setHistory] = useState([initial]);
 
-  //Create a function that will take in a new mode and update the mode state with the new value.
+  //create a function that takes in a new mode and updates the mode state with a new value
   function transition(mode, replace) {
-    // setMode(mode);
     setHistory( prev =>
-      // if there is a new mode to replace the current mode
-      replace //if replace is true
-        // returns the last index of prev as our mode
-        // adds a new mode to the end of the array
+      // if there is a new mode to replace the current mode, i.e. if replace is true
+      replace
+        // replace the last element of the array with the new mode
       ? [...prev.slice(0, prev.length - 1), mode]
-        // returns the current mode, stays the same
+        // otherwise, returns the current mode - stays the same
       : [...prev, mode]
     )
   }
 
-  //Create a function that will take in a new mode and update the mode state with the new value.
-  function transition2(mode, replace) {
-    // setMode(mode);
-    setHistory( prev => prev.pop()
-      // [...prev.slice(0, prev.length - 2), mode]
-    )
-    // return;
-  }
-
+  //create a function to go back to the prev mode
   function back() {
+    //if there is no history to go back, end the function
     if (history.length < 2) {
       return;
     }
@@ -37,45 +28,8 @@ export default function useVisualMode(initial) {
     setHistory(prev => [...prev.slice(0, prev.length - 1)])
   }
 
-  //sets mode to the last item of the history array
+  //set mode to the last item of the history array
   const mode = history[history.length-1];
-  // return an object with a mode property, and transition
-  return { mode, transition, back, transition2 }
+
+  return { mode, transition, back }
 }
-
-
-// import React, { useState } from 'react';
-
-// export default function useVisualMode(initial) {
-//   // set the mode state with the initial mode provided
-//   // const [mode, setMode] = useState(initial);
-//   // set the mode to the second to last index of history
-//   const [history, setHistory] = useState([initial]);
-
-//   //Create a function that will take in a new mode and update the mode state with the new value.
-//   function transition(mode, replace) {
-//     // setMode(mode);
-//     setHistory( prev =>
-//       // if there is a new mode to replace the current mode
-//       replace
-//         // returns the last index of prev as our mode
-//         // adds a new mode to the end of the array
-//       ? [...prev.slice(0, prev.length - 1), mode]
-//         // returns the current mode, stays the same
-//       : [...prev, mode]
-//     )
-//   }
-
-//   function back() {
-//     if (history.length < 2) {
-//       return;
-//     }
-//     // prev is the latest history
-//     setHistory(prev => [...prev.slice(0, prev.length - 1)])
-//   }
-
-//   //sets mode to the last item of the history array
-//   const mode = history[history.length-1];
-//   // return an object with a mode property, and transition
-//   return { mode, transition, back }
-// }

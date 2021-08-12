@@ -1,4 +1,7 @@
+//Mock an external library, axios, by making a file with the same name in the __mocks__ directory
+//Jest framework will replace any axios import with this mock module instead.
 
+//create fixtures - reusable static data that is imported or embedded into a test file. Make sure the data matches the schema from the server.
 const fixtures = {
   days: [
     {
@@ -56,12 +59,16 @@ const fixtures = {
 
 
 export default {
-  //to mock the configuration object
+  //mock the configuration object
   defaults: { baseURL: "" },
 
+  //create a mock for the get function
+  //the url argument is accepted to replace the actual axios implementation
+  //use the url to route the request to our fixture data
   get: jest.fn(url => {
-    // console.log(url);
+
     if (url === "/api/days") {
+      //Resolve days data by returning a resolved promise to match the interface used by axios. This skips the whole sequence of http operations and resolves a hardcoded version of the response data
       return Promise.resolve({
         status: 200,
         statusText: "OK",
@@ -70,7 +77,7 @@ export default {
     }
 
     if (url === "/api/appointments") {
-      /* Resolve appointments data */
+      // Resolve appointments data
       return Promise.resolve({
         status: 200,
         statusText: "OK",
@@ -79,7 +86,7 @@ export default {
     }
 
     if (url === "/api/interviewers") {
-      /* Resolve interviewers data */
+      // Resolve interviewers data
       return Promise.resolve({
         status: 200,
         statusText: "OK",
@@ -88,42 +95,19 @@ export default {
     }
   }),
 
- //endpoints are already passed it so no need to create separate endpoints...
+ //Create a mock for the put function. Endpoints are already passed in so no need to create separate endpoints
   put: jest.fn(() => {
-    // console.log(url); //http://localhost:8001/api/appointments/1
-
-    // if (url === "/api/days") {
       return Promise.resolve({
         status: 204,
-        statusText: "No Content",
-        // data: fixtures.days
+        statusText: "No Content"
       });
-    // }
-
-    // if (url === "/api/appointments/" + fixtures.appointments["1"].id) {
-    //   /* Resolve appointments data */
-    //   return Promise.resolve({
-    //     status: 204,
-    //     statusText: "No Content",
-    //     data: fixtures.appointments
-    //   });
-    // }
-
-    // if (url === "/api/interviewers") {
-    //   /* Resolve interviewers data */
-    //   return Promise.resolve({
-    //     status: 204,
-    //     statusText: "No Content",
-    //     data: fixtures.interviewers
-    //   });
-    // }
   }),
 
+  //Create a mock for the delete function
   delete: jest.fn(() => {
-
       return Promise.resolve({
         status: 204,
-        statusText: "No Content",
+        statusText: "No Content"
       });
   })
 }

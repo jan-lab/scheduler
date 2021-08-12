@@ -3,7 +3,7 @@ import "components/Button.scss";
 const classNames = require('classnames');
 
 export default function Button(props) {
-  
+  //assign props based on the button class names
   const buttonClass = classNames("button", {
     "button--confirm": props.confirm,
     "button--danger": props.danger

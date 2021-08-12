@@ -1,33 +1,38 @@
 //There is often a need to compute new data from existing state in an application. To do this we can use a selector, a function that accepts state as an argument and returns data that is derived from that state.
 
 export function getAppointmentsForDay(state, givenDay) {
-  //... returns an array of appointments for that day
-  const selectedDay = state.days.find(day => day.name === givenDay );
-  // check if days array has an invalid day
+
+  const selectedDay = state.days.find(day => day.name === givenDay);
+  
+  // if days array has an invalid day, return an empty array
   if (state.days.length === 0 || !selectedDay) {
     return [];
   }
-  // for every id in selectedDay.appointments, the id is transformed to be its associated value in state.appointments
+  
+  // for each appointment id on the selectedDay, return the associated value in state.appointments
   const actualAppointments = selectedDay.appointments.map((id) => {
-    // console.log(state.appointments[id]);
     return state.appointments[id];
   });
+
+  //return the actualAppointments array
   return actualAppointments;
 }
 
 export function getInterviewersForDay(state, givenDay) {
-  //... returns an array of appointments for that day
-  const selectedDay = state.days.find(day => day.name === givenDay );
-  // check if days array has an invalid day
+
+  const selectedDay = state.days.find(day => day.name === givenDay);
+  
+  // if days array has an invalid day, return an empty array
   if (state.days.length === 0 || !selectedDay) {
     return [];
   }
-  // for every id in selectedDay.appointments, the id is transformed to be its associated value in state.appointments
+  
+  // for each interviewer id on the selectedDay, return the associated value in state.interviewers
   const actualInterviewers = selectedDay.interviewers.map((id) => {
-    // console.log(state.interviewers[id])
     return state.interviewers[id];
   });
-  // console.log(actualInterviewers)
+
+  // return the actualInterviewers array
   return actualInterviewers;
 }
 

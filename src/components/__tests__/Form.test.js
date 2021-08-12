@@ -1,12 +1,13 @@
 import React from "react";
-
-import { render, cleanup, fireEvent } from "@testing-library/react";
-
+//import our helper functions from the react-testing-library
+import { render, cleanup, fireEvent, prettyDOM, getByTestId } from "@testing-library/react";
+//import the Form component
 import Form from "components/Appointment/Form";
 
 afterEach(cleanup);
 
 describe("Form", () => {
+
   const interviewers = [
     {
       id: 1,
@@ -15,12 +16,6 @@ describe("Form", () => {
     }
   ];
 
-  // it("renders without crashing", () => {
-  //   //render(<Form />);
-  //   const { getByPlaceholderText } = render(
-  //     <Form interviewers={interviewers} />
-  //   );
-  // });
 
   it("renders without student name if not provided", () => {
     const { getByPlaceholderText } = render(
@@ -32,107 +27,92 @@ describe("Form", () => {
 
   it("renders with initial student name", () => {
     const { getByTestId } = render(
-      <Form interviewers={interviewers} name="Lydia Miller-Jones" />
+      <Form interviewers={interviewers} student="Lydia Miller-Jones" />
       );
+
     expect(getByTestId("student-name-input")).toHaveValue("Lydia Miller-Jones");
   });
 
 
   it("validates that the student name is not blank", () => {
-    /* 1. Create the mock onSave function */
+    // 1. Create the mock onSave function
     const onSave = jest.fn();
 
-    /* 2. Render the Form with interviewers and the onSave mock function passed as an onSave prop, the name prop should be blank or undefined */
-    // const { getByPlaceholderText } = render(
+    // 2. Render the Form with interviewers and the onSave mock function passed as an onSave prop
     const { getByText } = render(
       <Form interviewers={interviewers} onSave={onSave} />
     );
-    /* 3. Click the save button */
+    // 3. Click the save button
     fireEvent.click(getByText("Save"));
 
+    // 4. Verify that the error msg shows up and does not allow the user to save
     expect(getByText(/student name cannot be blank/i)).toBeInTheDocument();
     expect(onSave).not.toHaveBeenCalled();
   });
   
 
-  // //Event though it seems redundant, the test is not useless because of the overlap. We do not determine the quality of the tests by code coverage metrics alone. When we look at what the "calls onSave function when the name is defined" test is verifying, we can see that it uses expect(queryByText(/student name cannot be blank/i)).toBeNull().This test does an extra verification that is import. It confirms that we do not show the error message after we click the "Save" with a valid input value.
-  // it("calls onSave function when the name is defined", () => {
-  //   /* 1. Create the mock onSave function */
-  //   const onSave = jest.fn();
-  //   /* 2. Render the Form with interviewers, name and the onSave mock function passed as an onSave prop */
-  //   // const { getByPlaceholderText } = render(
-  //   const { getByText, queryByText } = render(
-  //     <Form interviewers={interviewers} onSave={onSave} name="Lydia Miller-Jones" />
-  //   );
-  //   /* 3. Click the save button */
-  //   fireEvent.click(getByText("Save"));
-
-  //   expect(queryByText(/student name cannot be blank/i)).toBeNull();
-  //   expect(onSave).toHaveBeenCalledTimes(1);
-  //   expect(onSave).toHaveBeenCalledWith("Lydia Miller-Jones", null);
-  // });
-
-  // it("submits the name entered by the user", () => {
-  //   const onSave = jest.fn();
-  //   const { getByText, getByPlaceholderText } = render(
-  //     <Form interviewers={interviewers} onSave={onSave} />
-  //   );
-  
-  //   const input = getByPlaceholderText("Enter Student Name");
-  
-  //   fireEvent.change(input, { target: { value: "Lydia Miller-Jones" } });
-  //   fireEvent.click(getByText("Save"));
-  
-  //   expect(onSave).toHaveBeenCalledTimes(1);
-  //   expect(onSave).toHaveBeenCalledWith("Lydia Miller-Jones", null);
-  // });
-
   it("can successfully save after trying to submit an empty student name", () => {
+    // 1. Create the mock onSave function
     const onSave = jest.fn();
+
+    //2. Render the Form with interviewers and the onSave mock function passed as an onSave prop
     const { getByText, getByPlaceholderText, queryByText } = render(
       <Form interviewers={interviewers} onSave={onSave} />
     );
   
+    //3. Click the save button
     fireEvent.click(getByText("Save"));
-  
+      
+    // 4. Verify that the error msg shows up and does not allow the user to save
     expect(getByText(/student name cannot be blank/i)).toBeInTheDocument();
     expect(onSave).not.toHaveBeenCalled();
   
+    // 5. Enter the valid input in the student name field
     fireEvent.change(getByPlaceholderText("Enter Student Name"), {
       target: { value: "Lydia Miller-Jones" }
     });
-  
+    
+    // 6. Click the save button
     fireEvent.click(getByText("Save"));
-  
+
+    // 7. Confirm that we do not show the error message after we click the "Save" with a valid input value
     expect(queryByText(/student name cannot be blank/i)).toBeNull();
-  
+    
+    // 8. Confirm that the schedule has been saved
     expect(onSave).toHaveBeenCalledTimes(1);
     expect(onSave).toHaveBeenCalledWith("Lydia Miller-Jones", null);
   });
 
+
   it("calls onCancel and resets the input field", () => {
+    // 1. Create the mock onCancel function
     const onCancel = jest.fn();
-    const { getByText, getByPlaceholderText, queryByText } = render(
+
+    // 2. Render the Form with interviewers, student, onSave mock function, onCancel mock function passed as props
+    const { getByText, getByPlaceholderText, queryByText, container } = render(
       <Form
         interviewers={interviewers}
-        name="Lydia Mill-Jones"
+        student="Lydia Mill-Jones"
         onSave={jest.fn()}
         onCancel={onCancel}
       />
     );
-  
+    // 3. Click on the save button
     fireEvent.click(getByText("Save"));
-  
+    
+    // 4. Change the student name
     fireEvent.change(getByPlaceholderText("Enter Student Name"), {
       target: { value: "Lydia Miller-Jones" }
     });
-  
+    
+    // 5. Click on the cancel button
     fireEvent.click(getByText("Cancel"));
   
+    // 6. Confirm that we do not show the error message after we click the "Cancel" button
     expect(queryByText(/student name cannot be blank/i)).toBeNull();
-  
     expect(getByPlaceholderText("Enter Student Name")).toHaveValue("");
-  
+    
+    // 7. Confirm that the schedule has been cancelled
     expect(onCancel).toHaveBeenCalledTimes(1);
   });
 });
