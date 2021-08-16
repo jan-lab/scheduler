@@ -124,7 +124,8 @@ export default function Appointment(props) {
       {mode === ERROR_DELETE && (
         <Error 
           message={"Deleting error"}
-          onClose={() => {back(); back();}}
+          //upon onClose, app shows the appointment not deleted
+          onClose={() => {back();}}
         />
       )}
     </article>
